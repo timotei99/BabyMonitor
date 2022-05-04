@@ -28,8 +28,6 @@ public class HomeRepository {
                         task -> {
                             if(task.isSuccessful() && task.getResult() != null){
                                 name.setValue(task.getResult().getString("firstName"));
-                                Log.w("FIREBASE","Task successful! User name retrieved. "
-                                        +name.toString());
                             }
                             else{
                                 name.setValue("name");

@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> time.setText(s));
         homeViewModel.getName().observe(getViewLifecycleOwner(), name::setText);
-        Log.d("TEST","User name: "+homeViewModel.getName().getValue());
+
 
 
         watchBtn.setOnClickListener(v -> {

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.preference.SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="@bool/camera_pref"
         android:key="camera_switch"
         android:summary="Turn camera on or off"
         android:title="Baby camera"

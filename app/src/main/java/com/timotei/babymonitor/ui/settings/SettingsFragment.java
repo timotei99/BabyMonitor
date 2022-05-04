@@ -14,8 +14,17 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.timotei.babymonitor.R;
+import com.timotei.babymonitor.data.model.VideoCamera;
 import com.timotei.babymonitor.databinding.FragmentHomeBinding;
 import com.timotei.babymonitor.databinding.FragmentSettingsBinding;
 import com.timotei.babymonitor.ui.home.HomeViewModel;
@@ -24,22 +33,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private SettingsViewModel settingsViewModel;
     private FragmentSettingsBinding binding;
+    private SettingsRepository repo = SettingsRepository.getInstance();
 
-    /*@NonNull
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
 
-        settingsViewModel =
-                new ViewModelProvider(this).get(SettingsViewModel.class);
-
-        binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        return root;
-    }*/
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
+
 
         settingsViewModel =
                 new ViewModelProvider(this).get(SettingsViewModel.class);
@@ -47,20 +47,36 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 
 
-        addPreferencesFromResource(R.xml.preference);
 
-        final Preference cameraPref = findPreference("camera_switch");
+        addPreferencesFromResource(R.xml.preference);
+        final SwitchPreference cameraPref = findPreference("camera_switch");
+        if(cameraPref!=null) {
+            if(!repo.getVideoCamera().getStatus().equals("on")) {
+                cameraPref.setChecked(false);
+            }
+        }
+
         Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 Log.d("SETTINGS_FRAGMENT","Camera setting changed!");
+                String val="";
+                if(newValue.toString().equals("true")) {
+                    repo.setVideoCameraStatus("on");
+                }
+                else{
+                    repo.setVideoCameraStatus("off");
+                }
                 return true;
             }
         };
 
-
         if(cameraPref!=null) {
             cameraPref.setOnPreferenceChangeListener(changeListener);
         }
+
+
     }
+
+
 
 }
