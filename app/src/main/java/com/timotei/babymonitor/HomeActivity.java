@@ -50,25 +50,8 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        getSettings();
+        repo.getSettings();
     }
 
-    private void getSettings(){
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild("video_camera")){
-                    repo.getVideoCamera().setStatus(snapshot.child("video_camera").child("status").getValue().toString());
-                }
-                else{
-                    Log.w("DATABASE","Not getting the value");
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("firebase", "Error getting data", error.toException());
-            }
-        });
-    }
 }

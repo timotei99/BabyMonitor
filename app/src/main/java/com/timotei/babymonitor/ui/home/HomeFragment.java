@@ -3,6 +3,7 @@ package com.timotei.babymonitor.ui.home;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,18 +49,20 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+
 
         final TextView time = binding.time;
         final TextView name = binding.name;
         final Button watchBtn = binding.btnStream;
+        final ImageView imgView= binding.imageView;
 
+        imgView.setImageURI(Uri.parse("asda"));
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> time.setText(s));
         homeViewModel.getName().observe(getViewLifecycleOwner(), name::setText);
 
 
-
+        View root = binding.getRoot();
         watchBtn.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), StreamActivity.class));
         });

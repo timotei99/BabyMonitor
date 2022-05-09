@@ -3,28 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.preference.SwitchPreference
-        android:defaultValue="@bool/camera_pref"
-        android:key="camera_switch"
-        android:summary="Turn camera on or off"
-        android:title="Baby camera"
-        app:icon="@drawable/ic_baseline_videocam_24"/>
-    <androidx.preference.SwitchPreference
-        android:defaultValue="true"
-        android:icon="@drawable/ic_baseline_mic_24"
-        android:key="audio_switch"
-        android:summary="Turn microphone on or off"
-        android:title="Baby microphone" />
-    <androidx.preference.SwitchPreference
-        android:defaultValue="true"
-        android:key="temperature_monitor"
-        android:summary="Baby room temperature "
-        android:title="Room temperature monitor"
-        app:icon="@drawable/ic_baseline_device_thermostat_24" />
-    <androidx.preference.SwitchPreference
-        android:defaultValue="true"
-        android:key="Humidity_monitor"
-        android:summary="Baby room temperature "
-        android:title="Air humidity monitor"
-        app:icon="@drawable/ic_baseline_water_damage_24" />
+    <PreferenceCategory
+        app:key="devices"
+        app:title="Devices">
+        <androidx.preference.SwitchPreference
+            android:defaultValue="@bool/camera_pref"
+            android:key="camera_switch"
+            android:summary="Turn camera on or off"
+            android:title="Baby camera"
+            app:icon="@drawable/ic_baseline_videocam_24" />
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_baseline_mic_24"
+            android:key="audio_switch"
+            android:summary="Turn microphone on or off"
+            android:title="Baby microphone" />
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="temperature_monitor"
+            android:summary="Baby room temperature "
+            android:title="Room temperature monitor"
+            app:icon="@drawable/ic_baseline_device_thermostat_24" />
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="Humidity_monitor"
+            android:summary="Baby room temperature "
+            android:title="Air humidity monitor"
+            app:icon="@drawable/ic_baseline_water_damage_24" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="Options"
+        app:key="options">
+        <androidx.preference.Preference
+            android:key="logoutBtn"
+            android:summary="Press to log out"
+            android:title="Logout" />
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

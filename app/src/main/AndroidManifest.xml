@@ -49,6 +49,10 @@
             android:name=".StreamActivity"
             android:exported="true"
             android:label="@string/title_activity_stream" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

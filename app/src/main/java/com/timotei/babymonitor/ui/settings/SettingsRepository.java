@@ -1,5 +1,7 @@
 package com.timotei.babymonitor.ui.settings;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +41,26 @@ public class SettingsRepository {
     }
 
     public void setVideoCameraStatus(String value){
+        videoCamera.setStatus(value);
         myRef.child("video_camera").child("status").setValue(value);
+    }
+
+    public void getSettings(){
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("video_camera")){
+                    getVideoCamera().setStatus(snapshot.child("video_camera").child("status").getValue().toString());
+                }
+                else{
+                    Log.w("DATABASE","Not getting the value");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("firebase", "Error getting data", error.toException());
+            }
+        });
     }
 }
