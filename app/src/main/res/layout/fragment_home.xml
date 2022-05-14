@@ -100,25 +100,53 @@
         android:drawableLeft="@drawable/ic_baseline_adjust_24"
         android:elevation="4dp"
         android:stateListAnimator="@null"
-        android:text="@string/watch_live"
+        android:text="Watch"
         android:translationZ="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <Button
+        android:id="@+id/btnRoomCondition"
+        style="@style/buttonBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/beige"
+        android:drawableLeft="@drawable/ic_baseline_dataset_24"
+        android:elevation="4dp"
+        android:stateListAnimator="@null"
+        android:text="@string/live_data"
+        android:translationZ="2dp"
+        app:layout_constraintEnd_toEndOf="@+id/text_home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStream" />
+
+    <Button
         android:id="@+id/btnData"
         style="@style/buttonBlue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/light_red"
         android:drawableLeft="@drawable/ic_baseline_show_chart_24"
         android:elevation="4dp"
         android:stateListAnimator="@null"
-        android:text="See reports"
+        android:text="@string/see_reports"
         android:translationZ="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStream" />
+        app:layout_constraintTop_toBottomOf="@+id/btnRoomCondition" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/text_home"
+        app:layout_constraintEnd_toEndOf="@+id/btnStream"
+        app:layout_constraintStart_toStartOf="@+id/btnStream"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

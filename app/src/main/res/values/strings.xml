@@ -29,4 +29,14 @@
     <string name="monitor_settings">Monitor settings</string>
     <string name="first_name">First Name</string>
     <string name="phone_number">Phone Number</string>
+    <string name="live_data">Live data</string>
+    <string name="see_reports">See reports</string>
+    <string name="heart_rate">Heart rate : %1$s bpm</string>
+    <string name="oxygen">Oxygen : %1$s</string>
+    <string name="weight">Weight : %1$s</string>
+    <string name="temperature">Temperature : %1$s\u2103</string>
+    <string name="humidity">Humidity : %1$s%%</string>
+    <string name="co2">CO2: %1$s</string>
+    <string name="nox">NOx: %1$s</string>
+    <string name="nh3">NH3: %1$s</string>
 </resources>
