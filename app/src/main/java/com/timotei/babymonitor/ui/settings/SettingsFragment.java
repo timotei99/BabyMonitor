@@ -1,6 +1,8 @@
 package com.timotei.babymonitor.ui.settings;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +50,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 new ViewModelProvider(this).get(SettingsViewModel.class);
         binding = FragmentSettingsBinding.inflate(getLayoutInflater());
 
+        SharedPreferences sharedPreferences= getContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         addPreferencesFromResource(R.xml.preference);
 
@@ -63,27 +67,31 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         final SwitchPreference cameraPref = findPreference("camera_switch");
-        if (cameraPref != null) {
+        final SwitchPreference micPref = findPreference("audio_switch");
+        /*if (cameraPref != null) {
             if (!repo.getVideoCamera().getStatus().equals("on")) {
                 cameraPref.setChecked(false);
             }
-        }
+        }*/
+        cameraPref.setChecked(sharedPreferences.getBoolean("camera",true));
+        micPref.setChecked(sharedPreferences.getBoolean("audio",true));
 
-        Preference.OnPreferenceChangeListener changeListener = new Preference.OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d("SETTINGS_FRAGMENT", "Camera setting changed!");
-                String val = "";
-                if (newValue.toString().equals("true")) {
-                    repo.setVideoCameraStatus("on");
-                } else {
-                    repo.setVideoCameraStatus("off");
-                }
-                return true;
+
+        Preference.OnPreferenceChangeListener cameraChangeListener = (preference, newValue) -> {
+            String key= preference.getKey();
+            if (newValue.toString().equals("true")) {
+                repo.setVideoCameraStatus("on");
+                editor.putBoolean("camera",true);
+            } else {
+                repo.setVideoCameraStatus("off");
+                editor.putBoolean("camera",false);
             }
+            editor.apply();
+            return true;
         };
 
         if (cameraPref != null) {
-            cameraPref.setOnPreferenceChangeListener(changeListener);
+            cameraPref.setOnPreferenceChangeListener(cameraChangeListener);
         }
 
 

@@ -39,4 +39,5 @@
     <string name="co2">CO2: %1$s</string>
     <string name="nox">NOx: %1$s</string>
     <string name="nh3">NH3: %1$s</string>
+    <string name="notification_default_channel_id">1</string>
 </resources>

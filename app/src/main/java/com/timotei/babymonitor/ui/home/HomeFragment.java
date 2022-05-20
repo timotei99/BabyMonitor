@@ -60,22 +60,20 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        db=FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
+        db = FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
 
 
         final TextView time = binding.time;
         final TextView name = binding.name;
         final Button watchBtn = binding.btnStream;
         final Button roomConditionBtn = binding.btnRoomCondition;
-        final ImageView imgView= binding.imageView;
-        loadingProgressBar= binding.loading;
+        final ImageView imgView = binding.imageView;
+        loadingProgressBar = binding.loading;
 
         setImage(imgView);
 
-
         homeViewModel.getText().observe(getViewLifecycleOwner(), s -> time.setText(s));
         homeViewModel.getName().observe(getViewLifecycleOwner(), name::setText);
-
 
         View root = binding.getRoot();
         watchBtn.setOnClickListener(v -> {
@@ -85,11 +83,7 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(requireContext(), RoomConditionActivity.class));
         });
 
-
-
         return root;
-
-
     }
 
     @Override
@@ -98,13 +92,13 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    private void setImage(ImageView image){
+    private void setImage(ImageView image) {
 
-        DatabaseReference imgRef=db.getReference().child("server/baby_image");
+        DatabaseReference imgRef = db.getReference().child("server/baby_image");
         imgRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String link= snapshot.getValue(String.class);
+                String link = snapshot.getValue(String.class);
                 Picasso.get().load(link).fit().into(image);
                 //loadingProgressBar.setVisibility(View.GONE);
             }

@@ -1,6 +1,10 @@
 package com.timotei.babymonitor;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.timotei.babymonitor.databinding.ActivityHomeBinding;
 import com.timotei.babymonitor.ui.settings.SettingsRepository;
 
@@ -28,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     private SettingsRepository repo;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private String DB_LINK="https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +41,11 @@ public class HomeActivity extends AppCompatActivity {
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        database = FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
+        database = FirebaseDatabase.getInstance(DB_LINK);
         myRef = database.getReference("server/sensors");
         repo = SettingsRepository.getInstance();
-
+        String username = "puf";
+        FirebaseMessaging.getInstance().subscribeToTopic("user_"+username);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -50,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        repo.getSettings();
+        //repo.getSettings();
         repo.getSensorData();
     }
 

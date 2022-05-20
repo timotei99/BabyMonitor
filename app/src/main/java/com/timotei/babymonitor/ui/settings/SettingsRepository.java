@@ -78,7 +78,7 @@ public class SettingsRepository {
         myRef.child("video_camera").child("status").setValue(value);
     }
 
-    public void getSettings(){
+    /*public void getSettings(){
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -95,7 +95,7 @@ public class SettingsRepository {
                 Log.e("firebase", "Error getting data", error.toException());
             }
         });
-    }
+    }*/
 
     public boolean getSensorData(){
         myRef.addValueEventListener(new ValueEventListener() {
