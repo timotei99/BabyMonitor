@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.timotei.babymonitor.data.model.HumiditySensor;
 import com.timotei.babymonitor.data.model.PulseSensor;
+import com.timotei.babymonitor.data.model.Scale;
 import com.timotei.babymonitor.data.model.TemperatureSensor;
 import com.timotei.babymonitor.data.model.VideoCamera;
 
@@ -24,6 +27,7 @@ public class SettingsRepository {
     private TemperatureSensor temperatureSensor;
     private HumiditySensor humiditySensor;
     private PulseSensor pulseSensor;
+    private Scale scale;
 
     private SettingsRepository(){
         database = FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
@@ -78,24 +82,13 @@ public class SettingsRepository {
         myRef.child("video_camera").child("status").setValue(value);
     }
 
-    /*public void getSettings(){
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild("video_camera")){
-                    getVideoCamera().setStatus(snapshot.child("video_camera").child("status").getValue().toString());
-                }
-                else{
-                    Log.w("DATABASE","Not getting the value");
-                }
-            }
+    public Scale getScale() {
+        return scale;
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("firebase", "Error getting data", error.toException());
-            }
-        });
-    }*/
+    public void setScale(Scale scale) {
+        this.scale = scale;
+    }
 
     public boolean getSensorData(){
         myRef.addValueEventListener(new ValueEventListener() {
@@ -105,7 +98,7 @@ public class SettingsRepository {
                 //Log.d("DATABASE","temp: "+temperatureSensor.getDegrees());
                 setHumiditySensor(snapshot.child("humidity").getValue(HumiditySensor.class));
                 setPulseSensor(snapshot.child("heart_rate").getValue(PulseSensor.class));
-
+                setScale(snapshot.child("weight").getValue(Scale.class));
             }
 
             @Override
@@ -115,4 +108,39 @@ public class SettingsRepository {
         });
         return true;
     }
+
+    public void startWhiteNoises(){
+        database.getReference("server/raspberry_actions")
+                .child("whitenoise")
+                .setValue("on")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d("FIREBASE", "White noises started.");
+                        }
+                        else{
+                            Log.e("FIREBASE", "Error starting white noises!", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void storeLastWeight(String weight){
+        database.getReference("server/sensors/weight")
+                .child("last_weight")
+                .setValue(weight)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Log.d("FIREBASE", "Last weight updated.");
+                        }
+                        else{
+                            Log.e("FIREBASE", "Error updating weight!", task.getException());
+                        }
+                    }
+                });
+    }
+
 }

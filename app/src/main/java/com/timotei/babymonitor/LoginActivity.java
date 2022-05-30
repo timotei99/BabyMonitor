@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
+    private ProgressBar loadingProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final TextView createAccountTextView =binding.createAccountTv;
-        final ProgressBar loadingProgressBar = binding.loading;
+        loadingProgressBar = binding.loading;
 
 
         loginButton.setOnClickListener(v -> {
@@ -89,27 +90,19 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                         updateUI(null);
+                        loadingProgressBar.setVisibility(View.GONE);
                     }
                 });
     }
 
     private void updateUI(FirebaseUser currentUser){
         if(currentUser != null){
-            Toast.makeText(this,"You Signed In successfully",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"You signed In successfully",Toast.LENGTH_LONG).show();
             startActivity(new Intent(this,HomeActivity.class));
 
         }else {
-            Toast.makeText(this,"You Didnt signed in",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"You didn't signed in",Toast.LENGTH_LONG).show();
         }
     }
 
-    /*private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }*/
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }
 }

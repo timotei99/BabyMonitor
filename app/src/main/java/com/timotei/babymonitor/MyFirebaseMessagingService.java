@@ -45,13 +45,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         return;
                     }
 
-                    // Get new FCM registration token
-                    String token1 = task.getResult();
-
-                    // Log and toast
-                    //String msg = getString(R.string.msg_token_fmt, token);
-                    //Log.d(TAG, msg);
-                    //Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -63,9 +56,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            String payload = remoteMessage.getData().get("id");
+            Log.d(TAG, "Message data payload: " + payload);
 
             Intent intent = new Intent(this, NotificationActivity.class);
+            intent.putExtra("id",payload);
+            intent.setAction(Long.toString(System.currentTimeMillis()));
             @SuppressLint("UnspecifiedImmutableFlag")
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);
@@ -83,27 +79,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String message = remoteMessage.getNotification().getBody();
             Log.d(TAG, "Message Notification Title: " + title);
             Log.d(TAG, "Message Notification Body: " + message);
-            /*if(remoteMessage.getNotification().getBody().equals("crying")){
-                Log.d("NOTIFICATION","Here");
-                Intent intent = new Intent(this, NotificationActivity.class);
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                stackBuilder.addNextIntentWithParentStack(intent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(0,
-                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            }*/
-
-            sendLocal(title,message);
+            //sendLocal(title,message);
         }
 
     }
 
     private void sendLocal(String title,String message){
+        Log.d("NOTIF","sendLocal() method called");
         Intent intent = new Intent(this, NotificationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("message",message);
+        intent.setAction(Long.toString(System.currentTimeMillis()));
         @SuppressLint("UnspecifiedImmutableFlag")
-        PendingIntent pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)

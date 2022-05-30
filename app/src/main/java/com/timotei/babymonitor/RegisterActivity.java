@@ -110,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                    Toast.makeText(RegisterActivity.this,
                            "User registered successfully. Please verify your account!",
                            Toast.LENGTH_SHORT).show();
+                   FirebaseAuth.getInstance().signOut();
                    startActivity(new Intent(this, LoginActivity.class));
                }
                else{

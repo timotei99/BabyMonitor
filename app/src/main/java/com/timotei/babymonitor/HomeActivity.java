@@ -6,10 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.timotei.babymonitor.databinding.ActivityHomeBinding;
+import com.timotei.babymonitor.ui.notifications.NotificationRepository;
 import com.timotei.babymonitor.ui.settings.SettingsRepository;
 
 public class HomeActivity extends AppCompatActivity {
@@ -35,6 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private String DB_LINK="https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app";
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,11 @@ public class HomeActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance(DB_LINK);
         myRef = database.getReference("server/sensors");
         repo = SettingsRepository.getInstance();
+
+
+
+
+
         String username = "puf";
         FirebaseMessaging.getInstance().subscribeToTopic("user_"+username);
 
@@ -54,11 +63,12 @@ public class HomeActivity extends AppCompatActivity {
                  R.id.navigation_settings, R.id.navigation_home, R.id.navigation_notifications)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         //repo.getSettings();
         repo.getSensorData();
+
     }
 
 

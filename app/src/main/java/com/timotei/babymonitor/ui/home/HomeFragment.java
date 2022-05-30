@@ -34,11 +34,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.timotei.babymonitor.GraphsActivity;
 import com.timotei.babymonitor.R;
 import com.timotei.babymonitor.RegisterActivity;
 import com.timotei.babymonitor.RoomConditionActivity;
 import com.timotei.babymonitor.StreamActivity;
 import com.timotei.babymonitor.databinding.FragmentHomeBinding;
+import com.timotei.babymonitor.ui.notifications.NotificationRepository;
 
 import java.util.Objects;
 
@@ -46,6 +48,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
+    private NotificationRepository notifications;
     private FirebaseDatabase db;
     private ProgressBar loadingProgressBar;
 
@@ -62,11 +65,12 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         db = FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
 
-
+        notifications=new NotificationRepository();
         final TextView time = binding.time;
         final TextView name = binding.name;
         final Button watchBtn = binding.btnStream;
         final Button roomConditionBtn = binding.btnRoomCondition;
+        final Button dataBtn = binding.btnData;
         final ImageView imgView = binding.imageView;
         loadingProgressBar = binding.loading;
 
@@ -82,6 +86,9 @@ public class HomeFragment extends Fragment {
         roomConditionBtn.setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), RoomConditionActivity.class));
         });
+        dataBtn.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), GraphsActivity.class));
+        });
 
         return root;
     }
@@ -92,6 +99,7 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void setImage(ImageView image) {
 
         DatabaseReference imgRef = db.getReference().child("server/baby_image");
@@ -108,6 +116,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error Loading Image", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
     }
