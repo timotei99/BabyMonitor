@@ -24,6 +24,18 @@
             android:key="notification_switch"
             android:summary="Disable to stop receiving any notification"
             android:title="Notifications" />
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/ic_baseline_screenshot_24"
+            android:key="screenshot_switch"
+            android:summary="Enable/Disable periodic camera captures"
+            android:title="Camera captures" />
+        <androidx.preference.EditTextPreference
+            android:defaultValue="60"
+            android:icon="@drawable/ic_baseline_access_time_24"
+            android:key="screenshot_frequency"
+            android:summary="Click to edit the update time (sec)"
+            android:title="Capture frequency"/>
     </PreferenceCategory>
     <PreferenceCategory
         app:title="Options"

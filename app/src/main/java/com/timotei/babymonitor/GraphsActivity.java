@@ -29,7 +29,7 @@ public class GraphsActivity extends AppCompatActivity implements AdapterView.OnI
                             "https://thingspeak.com/channels/1747533/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15",
                             "https://thingspeak.com/channels/1747533/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15",
                             "https://thingspeak.com/channels/1747533/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"};
-    private WebView webView;
+
     String[] graphs = { "Temperature", "Humidity", "Pulse", "Weight", "CO2"};
 
     @RequiresApi(api = Build.VERSION_CODES.O)

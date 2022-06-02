@@ -49,15 +49,16 @@ import com.timotei.babymonitor.StreamActivity;
 import com.timotei.babymonitor.databinding.FragmentHomeBinding;
 import com.timotei.babymonitor.ui.notifications.NotificationRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private HomeRepository repo;
     private FragmentHomeBinding binding;
-    private NotificationRepository notifications;
-    private FirebaseDatabase db;
-    private ProgressBar loadingProgressBar;
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -65,26 +66,19 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        //Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        db = FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
+        repo=HomeRepository.getInstance();
 
-        notifications=new NotificationRepository();
         final TextView time = binding.time;
         final TextView name = binding.name;
         final Button watchBtn = binding.btnStream;
         final Button roomConditionBtn = binding.btnRoomCondition;
         final Button dataBtn = binding.btnData;
         final ImageView imgView = binding.imageView;
-        loadingProgressBar = binding.loading;
 
+        repo.setName(name);
+        time.setText(dateTimeFormatter.format(LocalDateTime.now()));
         setImage(imgView);
-
-        homeViewModel.getText().observe(getViewLifecycleOwner(), s -> time.setText(s));
-        homeViewModel.getName().observe(getViewLifecycleOwner(), name::setText);
 
         View root = binding.getRoot();
         watchBtn.setOnClickListener(v -> {
@@ -114,7 +108,7 @@ public class HomeFragment extends Fragment {
 
         FirebaseStorage storage=FirebaseStorage.getInstance();
         StorageReference imgRef=storage.getReference().child("baby_sleeping.jpg");
-
+        //TODO : place UID before image in storage
 
         imgRef.getDownloadUrl()
                 .addOnSuccessListener(uri -> Picasso.get().load(uri).fit().into(image))

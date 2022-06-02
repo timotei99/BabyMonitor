@@ -111,11 +111,4 @@ public class NotificationActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
-    /*@Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        String notificationType=getIntent().getExtras().getString("type");
-        Log.d("NOTIFICATION","Here "+notificationType);
-    }*/
 }

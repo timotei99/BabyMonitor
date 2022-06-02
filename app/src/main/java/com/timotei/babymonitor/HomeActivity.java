@@ -20,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,16 +28,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.timotei.babymonitor.databinding.ActivityHomeBinding;
+import com.timotei.babymonitor.ui.home.HomeRepository;
 import com.timotei.babymonitor.ui.notifications.NotificationRepository;
 import com.timotei.babymonitor.ui.settings.SettingsRepository;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
-    private SettingsRepository repo;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    private String DB_LINK="https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app";
+    private SettingsRepository settingsRepo;
+    private HomeRepository homeRepository;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -45,11 +46,10 @@ public class HomeActivity extends AppCompatActivity {
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        database = FirebaseDatabase.getInstance(DB_LINK);
-        myRef = database.getReference("server/sensors");
-        repo = SettingsRepository.getInstance();
+        settingsRepo = SettingsRepository.getInstance();
+        homeRepository = HomeRepository.getInstance();
 
-        String username = "puf";
+        String username = FirebaseAuth.getInstance().getUid();
         FirebaseMessaging.getInstance().subscribeToTopic("user_"+username);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -62,8 +62,7 @@ public class HomeActivity extends AppCompatActivity {
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        //repo.getSettings();
-        repo.getSensorData();
+        settingsRepo.getSensorData();
 
     }
 

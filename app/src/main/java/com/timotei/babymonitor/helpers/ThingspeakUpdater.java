@@ -14,8 +14,6 @@ import com.timotei.babymonitor.R;
 
 public class ThingspeakUpdater {
 
-    private final String channelID="1747533";
-
     public ThingspeakUpdater() {
     }
 

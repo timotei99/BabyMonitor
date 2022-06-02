@@ -4,39 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
-import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.timotei.babymonitor.LoginActivity;
 import com.timotei.babymonitor.R;
-import com.timotei.babymonitor.data.model.VideoCamera;
-import com.timotei.babymonitor.databinding.FragmentHomeBinding;
 import com.timotei.babymonitor.databinding.FragmentSettingsBinding;
-import com.timotei.babymonitor.ui.home.HomeViewModel;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private SettingsViewModel settingsViewModel;
     private FragmentSettingsBinding binding;
     private FirebaseAuth mAuth;
     private SettingsRepository repo = SettingsRepository.getInstance();
@@ -45,9 +27,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
 
-
-        settingsViewModel =
-                new ViewModelProvider(this).get(SettingsViewModel.class);
         binding = FragmentSettingsBinding.inflate(getLayoutInflater());
 
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE);
@@ -55,42 +34,86 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         addPreferencesFromResource(R.xml.preference);
 
-        Preference button = findPreference("logoutBtn");
-        button.setOnPreferenceClickListener(preference -> {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(requireContext(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            return true;
-        });
+        Preference logoutBtn = findPreference("logoutBtn");
+        if(logoutBtn!=null) {
+            logoutBtn.setOnPreferenceClickListener(preference -> {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                return true;
+            });
+        }
 
         final SwitchPreference cameraPref = findPreference("camera_switch");
-        final SwitchPreference micPref = findPreference("audio_switch");
-        /*if (cameraPref != null) {
-            if (!repo.getVideoCamera().getStatus().equals("on")) {
-                cameraPref.setChecked(false);
-            }
-        }*/
-        cameraPref.setChecked(sharedPreferences.getBoolean("camera",true));
+        final SwitchPreference notificationPref = findPreference("notification_switch");
+        final SwitchPreference screenshotPref=findPreference("screenshot_switch");
+        final EditTextPreference screenshotFreqPref=findPreference("screenshot_frequency");
+
+        if (cameraPref != null) {
+            cameraPref.setChecked(sharedPreferences.getBoolean("camera", true));
+        }
+        if(notificationPref!=null){
+            notificationPref.setChecked(sharedPreferences.getBoolean("notifications",true));
+        }
+        if(screenshotPref!=null){
+            screenshotPref.setChecked(sharedPreferences.getBoolean("screenshot",true));
+        }
+        if(screenshotFreqPref!=null){
+            screenshotFreqPref.setText(sharedPreferences.getString("frequency","60"));
+        }
 
 
-        Preference.OnPreferenceChangeListener cameraChangeListener = (preference, newValue) -> {
+        Preference.OnPreferenceChangeListener changeListener = (preference, newValue) -> {
             String key= preference.getKey();
-            if (newValue.toString().equals("true")) {
-                repo.setVideoCameraStatus("on");
-                editor.putBoolean("camera",true);
-            } else {
-                repo.setVideoCameraStatus("off");
-                editor.putBoolean("camera",false);
+            boolean value=newValue.toString().equals("true");
+            switch(key) {
+                case "camera_switch":
+                    if (value) {
+                        repo.updateSetting("camera","on");
+                    } else {
+                        repo.updateSetting("camera","off");
+                    }
+                    editor.putBoolean("camera", value);
+                break;
+                case "notification_switch":
+                    if (value) {
+                        repo.updateSetting("notifications","on");
+                    } else {
+                        repo.updateSetting("notifications","off");
+                    }
+                    editor.putBoolean("notifications", value);
+                break;
+                case "screenshot_switch":
+                    if (value) {
+                        repo.updateSetting("screenshot_status","on");
+                    } else {
+                        repo.updateSetting("screenshot_status","off");
+                    }
+                    editor.putBoolean("screenshot", value);
+                break;
+                case "screenshot_frequency":
+                    repo.updateSetting("screenshot_frequency",newValue.toString());
+                    editor.putString("frequency",newValue.toString());
+                break;
             }
             editor.apply();
             return true;
         };
 
         if (cameraPref != null) {
-            cameraPref.setOnPreferenceChangeListener(cameraChangeListener);
+            cameraPref.setOnPreferenceChangeListener(changeListener);
+        }
+        if(notificationPref!=null){
+            notificationPref.setOnPreferenceChangeListener(changeListener);
+        }
+        if(screenshotPref!=null){
+            screenshotPref.setOnPreferenceChangeListener(changeListener);
+        }
+        if (screenshotFreqPref!=null){
+            screenshotFreqPref.setOnPreferenceChangeListener(changeListener);
         }
 
     }

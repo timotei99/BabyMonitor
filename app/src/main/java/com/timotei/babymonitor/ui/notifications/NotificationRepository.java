@@ -44,29 +44,4 @@ public class NotificationRepository {
                 });
     }
 
-    public boolean checkForNotifications(){
-        final int[] count = {0};
-        firestore.collection("notifications")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                count[0]++;
-                                Log.d("NOTIFICATIONS", "HERRE");
-                            }
-                        } else {
-                            Log.d("NOTIFICATIONS", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-        Log.d("NOTIFICATIONS", "Got "+count[0]+" notifications");
-        if(count[0] >0){
-            return true;
-        }
-        return false;
-    }
-
-
 }

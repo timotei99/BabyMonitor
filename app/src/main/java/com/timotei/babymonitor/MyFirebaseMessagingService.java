@@ -80,12 +80,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Title: " + title);
             Log.d(TAG, "Message Notification Body: " + message);
 
-            //sendLocal(title,message);
         }
 
     }
 
-    private void sendLocal(String title,String message){
+    /*private void sendLocal(String title,String message){
         Log.d("NOTIF","sendLocal() method called");
         Intent intent = new Intent(this, NotificationActivity.class);
         intent.putExtra("message",message);
@@ -106,7 +105,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1,builder.build());
-    }
+    }*/
 
 
 }

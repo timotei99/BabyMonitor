@@ -87,14 +87,14 @@ public class RoomConditionActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(context,"Button pressed",Toast.LENGTH_SHORT).show();
-                        tare=repo.getScale().getValue();
+                        tare=repo.getSensors().getCurrent_weight();
                         alertDialog.setMessage("Now put baby back and press 'Weigh'");
                     }
                 });
                 alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        total=repo.getScale().getValue();
+                        total=repo.getSensors().getCurrent_weight();
                         Toast.makeText(context,"Getting the data...",Toast.LENGTH_SHORT).show();
                         float w=(Integer.parseInt(total)-Integer.parseInt(tare));
                         String weight=String.valueOf(w/1000);
@@ -108,18 +108,17 @@ public class RoomConditionActivity extends AppCompatActivity {
             }
         });
 
-        temp.setText(getString(R.string.temperature,repo.getTemperatureSensor().getDegrees()));
-        humidity.setText(getString(R.string.humidity,repo.getHumiditySensor().getValue()));
-        pulse.setText(getString(R.string.heart_rate,repo.getPulseSensor().getRate()));
-        weight.setText(getString(R.string.weight,repo.getScale().getLast_weight()));
+        temp.setText(getString(R.string.temperature,repo.getSensors().getTemperature()));
+        humidity.setText(getString(R.string.humidity,repo.getSensors().getHumidity()));
+        pulse.setText(getString(R.string.heart_rate,repo.getSensors().getHeart_rate()));
+        weight.setText(getString(R.string.weight,repo.getSensors().getLast_weight()));
 
-        int value=Integer.parseInt(repo.getAir().getValue());
+        int value=Integer.parseInt(repo.getSensors().getAir_quality());
 
         ppm.setText(getString(R.string.air_quality,value));
         Log.d("AIR_QUALITY","Set progress to: "+value/21);
         int progress=value/21; // I pick 2100 as a maximum value
 
-        //progressBar.setProgress(progress);
         progressBar.setMax(100);
         ValueAnimator animator = ValueAnimator.ofInt(0, progress);
         animator.setInterpolator(new LinearInterpolator());

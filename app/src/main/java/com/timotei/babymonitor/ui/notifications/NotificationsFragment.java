@@ -27,7 +27,6 @@ import com.timotei.babymonitor.databinding.FragmentNotificationsBinding;
 
 public class NotificationsFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
     private FragmentNotificationsBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -36,8 +35,6 @@ public class NotificationsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -46,13 +43,13 @@ public class NotificationsFragment extends Fragment {
         recycler= binding.recycler;
 
         String uid=mAuth.getCurrentUser().getUid();
-        Log.d("FIREBASE","UID is : "+uid);
         Query query=db.collection("notifications").orderBy("date").whereEqualTo("userId",uid);
         FirestoreRecyclerOptions<NotificationModel> options= new FirestoreRecyclerOptions.Builder<NotificationModel>()
                 .setQuery(query,NotificationModel.class)
                 .build();
 
         adapter= new FirestoreRecyclerAdapter<NotificationModel,NotificationViewHolder>(options){
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             protected void onBindViewHolder(@NonNull NotificationViewHolder holder, int position, @NonNull NotificationModel model) {
@@ -66,16 +63,12 @@ public class NotificationsFragment extends Fragment {
                 else{
                     holder.icon.setImageDrawable(getResources().getDrawable(R.drawable.notification_bell));
                 }
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onClick(View v) {
-                        holder.itemView.setVisibility(View.GONE);
-                        String docId=getSnapshots().getSnapshot(holder.getAdapterPosition()).getId();
-                        Log.d("Firebase","Doc id is: "+docId);
-                        NotificationRepository repo = new NotificationRepository();
-                        repo.deleteNotification(docId,requireContext());
-                    }
+                holder.itemView.setOnClickListener(v -> {
+                    holder.itemView.setVisibility(View.GONE);
+                    String docId=getSnapshots().getSnapshot(holder.getAdapterPosition()).getId();
+                    Log.d("Firebase","Doc id is: "+docId);
+                    NotificationRepository repo = new NotificationRepository();
+                    repo.deleteNotification(docId,requireContext());
                 });
             }
 
