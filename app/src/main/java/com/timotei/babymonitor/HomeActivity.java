@@ -49,10 +49,6 @@ public class HomeActivity extends AppCompatActivity {
         myRef = database.getReference("server/sensors");
         repo = SettingsRepository.getInstance();
 
-
-
-
-
         String username = "puf";
         FirebaseMessaging.getInstance().subscribeToTopic("user_"+username);
 

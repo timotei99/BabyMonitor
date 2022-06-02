@@ -28,13 +28,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.timotei.babymonitor.GraphsActivity;
+import com.timotei.babymonitor.PairingActivity;
 import com.timotei.babymonitor.R;
 import com.timotei.babymonitor.RegisterActivity;
 import com.timotei.babymonitor.RoomConditionActivity;
@@ -90,6 +97,9 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(requireContext(), GraphsActivity.class));
         });
 
+        Button btnBlt=binding.btnBluetooth;
+        btnBlt.setOnClickListener(v -> startActivity(new Intent(requireContext(), PairingActivity.class)));
+
         return root;
     }
 
@@ -102,22 +112,13 @@ public class HomeFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setImage(ImageView image) {
 
-        DatabaseReference imgRef = db.getReference().child("server/baby_image");
-        imgRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String link = snapshot.getValue(String.class);
-                Picasso.get().load(link).fit().into(image);
-                //loadingProgressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireContext(), "Error Loading Image", Toast.LENGTH_SHORT).show();
-            }
-        });
+        FirebaseStorage storage=FirebaseStorage.getInstance();
+        StorageReference imgRef=storage.getReference().child("baby_sleeping.jpg");
 
 
+        imgRef.getDownloadUrl()
+                .addOnSuccessListener(uri -> Picasso.get().load(uri).fit().into(image))
+                .addOnFailureListener(e -> Log.e("FIREBASE_STORAGE",e.getMessage()));
 
     }
 

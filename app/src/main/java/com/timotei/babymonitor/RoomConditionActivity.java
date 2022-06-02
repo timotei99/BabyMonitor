@@ -1,15 +1,21 @@
 package com.timotei.babymonitor;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.timotei.babymonitor.databinding.ActivityRoomConditionBinding;
 import com.timotei.babymonitor.helpers.ThingspeakUpdater;
 import com.timotei.babymonitor.ui.settings.SettingsRepository;
+
+import org.w3c.dom.Text;
 
 import java.util.Set;
 
@@ -43,10 +51,11 @@ public class RoomConditionActivity extends AppCompatActivity {
         final TextView humidity=binding.humidity;
         final TextView pulse=binding.pulse;
         final TextView weight= binding.weight;
+        final TextView ppm=binding.value;
+        final TextView text=binding.qualifier;
+        final ProgressBar progressBar = binding.progressBar2;
         final Button weigh=binding.btnWeigh;
         final Button back=binding.btnBack;
-
-
 
         back.setOnClickListener(v -> startActivity(new Intent(context,HomeActivity.class)));
         weigh.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +112,49 @@ public class RoomConditionActivity extends AppCompatActivity {
         humidity.setText(getString(R.string.humidity,repo.getHumiditySensor().getValue()));
         pulse.setText(getString(R.string.heart_rate,repo.getPulseSensor().getRate()));
         weight.setText(getString(R.string.weight,repo.getScale().getLast_weight()));
+
+        int value=Integer.parseInt(repo.getAir().getValue());
+
+        ppm.setText(getString(R.string.air_quality,value));
+        Log.d("AIR_QUALITY","Set progress to: "+value/21);
+        int progress=value/21; // I pick 2100 as a maximum value
+
+        //progressBar.setProgress(progress);
+        progressBar.setMax(100);
+        ValueAnimator animator = ValueAnimator.ofInt(0, progress);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setStartDelay(0);
+        animator.setDuration(1000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int value = (int) valueAnimator.getAnimatedValue();
+                progressBar.setProgress(value);
+            }
+        });
+
+        animator.start();
+
+        if(value<450){
+            text.setText("Good");
+            progressBar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.green)));
+        }
+        else if(value<800){
+            text.setText("Normal");
+            progressBar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_green)));
+        }
+        else if(value<1000){
+            text.setText("Acceptable");
+            progressBar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+        }
+        else if(value<2000){
+            text.setText("Poor");
+            progressBar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_red)));
+        }
+        else{
+            text.setText("Very poor");
+            progressBar.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.red)));
+        }
 
         setContentView(binding.getRoot());
     }

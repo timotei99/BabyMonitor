@@ -36,8 +36,6 @@
     <string name="weight">Last weight : %1$s kg</string>
     <string name="temperature">Temperature : %1$s\u2103</string>
     <string name="humidity">Humidity : %1$s%%</string>
-    <string name="co2">CO2: %1$s</string>
-    <string name="nox">NOx: %1$s</string>
-    <string name="nh3">NH3: %1$s</string>
+    <string name="air_quality">%1$d\ </string>
     <string name="notification_default_channel_id">1</string>
 </resources>

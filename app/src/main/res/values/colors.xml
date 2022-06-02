@@ -15,4 +15,7 @@
     <color name="dark_red">#a7000c</color>
     <color name="colorBackground">#F4F4F8</color>
     <color name="beige">#ddb067</color>
+    <color name="green">#FF4CAF50</color>
+    <color name="light_green">#90EE90</color>
+    <color name="yellow">#FFFFEB3B</color>
 </resources>

@@ -16,6 +16,12 @@
         <item name="android:backgroundTint">@color/dark_blue</item>
         <item name="fontFamily">@font/roboto_bold</item>
     </style>
+    <style name="myProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:shadowRadius">0.2</item>
+        <item name="android:shadowColor">#FF000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+    </style>
     <style name="Base.TextAppearance.AppCompat.Widget.Button.IconOnly">
         <item name="iconPadding">0dp</item>
         <item name="android:paddingTop">12dp</item>
@@ -44,5 +50,7 @@
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingRight">15dp</item>
     </style>
+
+
 
 </resources>

@@ -74,7 +74,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         }*/
         cameraPref.setChecked(sharedPreferences.getBoolean("camera",true));
-        micPref.setChecked(sharedPreferences.getBoolean("audio",true));
 
 
         Preference.OnPreferenceChangeListener cameraChangeListener = (preference, newValue) -> {

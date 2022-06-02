@@ -7,9 +7,8 @@
     android:background="@color/colorBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorBackground"
         android:paddingTop="?attr/actionBarSize"
         android:paddingBottom="?attr/actionBarSize">
@@ -200,57 +199,64 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingStart="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/co2"
+                    android:id="@+id/value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:drawablePadding="6dp"
-                    android:fontFamily="@font/roboto"
-                    android:text="@string/co2"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-                <TextView
-                    android:id="@+id/nox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="6dp"
-                    android:fontFamily="@font/roboto"
-                    android:text="@string/nox"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/co2" />
-
-                <TextView
-                    android:id="@+id/nh3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="6dp"
-                    android:fontFamily="@font/roboto"
-                    android:text="@string/nh3"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/nox" />
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/air_pollution"
-                    android:drawablePadding="8dp"
-                    android:fontFamily="@font/roboto_thin"
-                    android:gravity="center"
-                    android:text="Key air pollution indexes"
-                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:padding="2dp"
+                    android:text="400 "
+                    android:textSize="34sp"
+                    android:textStyle="italic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    style="@style/myProgressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="8dp"
+                    android:elevation="16dp"
+                    android:max="100"
+                    android:progress="40"
+                    android:progressDrawable="@drawable/progress_bar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/value" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:drawableLeft="@drawable/air_pollution"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/roboto_italic"
+                    android:gravity="center_vertical"
+                    android:text="Air quality  in parts per million (ppm)"
+                    app:layout_constraintBottom_toTopOf="@+id/value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/qualifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/roboto_black"
+                    android:text="Good"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

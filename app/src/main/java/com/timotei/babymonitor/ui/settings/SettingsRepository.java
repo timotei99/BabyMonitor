@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.timotei.babymonitor.data.model.AirQualitySensor;
 import com.timotei.babymonitor.data.model.HumiditySensor;
 import com.timotei.babymonitor.data.model.PulseSensor;
 import com.timotei.babymonitor.data.model.Scale;
@@ -28,6 +29,7 @@ public class SettingsRepository {
     private HumiditySensor humiditySensor;
     private PulseSensor pulseSensor;
     private Scale scale;
+    private AirQualitySensor air;
 
     private SettingsRepository(){
         database = FirebaseDatabase.getInstance("https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app");
@@ -90,6 +92,14 @@ public class SettingsRepository {
         this.scale = scale;
     }
 
+    public AirQualitySensor getAir() {
+        return air;
+    }
+
+    public void setAir(AirQualitySensor air) {
+        this.air = air;
+    }
+
     public boolean getSensorData(){
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -99,6 +109,7 @@ public class SettingsRepository {
                 setHumiditySensor(snapshot.child("humidity").getValue(HumiditySensor.class));
                 setPulseSensor(snapshot.child("heart_rate").getValue(PulseSensor.class));
                 setScale(snapshot.child("weight").getValue(Scale.class));
+                setAir(snapshot.child("air_quality").getValue(AirQualitySensor.class));
             }
 
             @Override
