@@ -50,6 +50,14 @@
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingRight">15dp</item>
     </style>
+    <style name="MyEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/rounded_corners</item>
+        <item name="borderRoundPercent">50</item>
+        <item name="android:shadowColor">#FF000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">0.2</item>
+    </style>
 
 
 

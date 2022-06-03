@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:paddingTop="?actionBarSize"
-    android:padding="16dp">
+    >
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/bluetooth"
+        android:drawableLeft="@drawable/mobile_phone"
         android:drawablePadding="6dp"
         android:fontFamily="@font/roboto_bold"
+        android:paddingStart="16dp"
         android:text="Pair devices"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,12 +34,32 @@
 
     <TextView
         android:id="@+id/textView15"
+        android:gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Pair with 'Baby monitor' then Sync"
+        android:text="Insert address of 'Baby monitor' then press SYNC"
         android:textSize="20sp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <EditText
+        android:id="@+id/ipAddress"
+        style="@style/MyEditText"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:elevation="12dp"
+        android:ems="10"
+        android:hint="IP Address"
+        android:inputType="textPersonName"
+        android:paddingStart="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSync"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

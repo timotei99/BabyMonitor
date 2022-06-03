@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.timotei.babymonitor.data.SensorsRepository;
 import com.timotei.babymonitor.databinding.ActivityHomeBinding;
 import com.timotei.babymonitor.ui.home.HomeRepository;
 import com.timotei.babymonitor.ui.notifications.NotificationRepository;
@@ -35,7 +36,7 @@ import com.timotei.babymonitor.ui.settings.SettingsRepository;
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
-    private SettingsRepository settingsRepo;
+    private SensorsRepository sensorsRepo;
     private HomeRepository homeRepository;
 
 
@@ -46,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        settingsRepo = SettingsRepository.getInstance();
+        sensorsRepo = SensorsRepository.getInstance();
         homeRepository = HomeRepository.getInstance();
 
         String username = FirebaseAuth.getInstance().getUid();
@@ -62,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        settingsRepo.getSensorData();
+        sensorsRepo.getSensorData();
 
     }
 

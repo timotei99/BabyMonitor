@@ -20,14 +20,14 @@ import com.timotei.babymonitor.databinding.FragmentSettingsBinding;
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private FragmentSettingsBinding binding;
-    private FirebaseAuth mAuth;
-    private SettingsRepository repo = SettingsRepository.getInstance();
+    private SettingsRepository repo;
 
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey) {
 
         binding = FragmentSettingsBinding.inflate(getLayoutInflater());
+        repo= SettingsRepository.getInstance();
 
         SharedPreferences sharedPreferences= getContext().getSharedPreferences("USER_PREFS", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

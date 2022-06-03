@@ -1,5 +1,6 @@
 package com.timotei.babymonitor.ui.settings;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,13 +20,11 @@ public class SettingsRepository {
     private final DatabaseReference myRef;
     private final String uid;
     private final String DB_LINK="https://babymonitor-e580c-default-rtdb.europe-west1.firebasedatabase.app";
-    private Sensors sensors;
 
     private SettingsRepository(){
         uid= FirebaseAuth.getInstance().getUid();
         database = FirebaseDatabase.getInstance(DB_LINK);
-        myRef = database.getReference("server/"+uid);
-        sensors=new Sensors();
+        myRef = database.getReference("server/"+uid+"/raspberry_actions");
     }
 
     public static SettingsRepository getInstance(){
@@ -35,30 +34,10 @@ public class SettingsRepository {
         return single_instance;
     }
 
-    public Sensors getSensors() {
-        return sensors;
-    }
 
-    public void setSensors(Sensors sensors) {
-        this.sensors = sensors;
-    }
-
-    public void getSensorData(){
-        myRef.child("sensors").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                setSensors(snapshot.getValue(Sensors.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("firebase", "Error getting data", error.toException());
-            }
-        });
-    }
 
     public void startWhiteNoises(){
-        myRef.child("raspberry_actions").child("whitenoise")
+        myRef.child("whitenoise")
                 .setValue("on")
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
@@ -70,21 +49,9 @@ public class SettingsRepository {
                 });
     }
 
-    public void storeLastWeight(String weight){
-        myRef.child("sensors").child("weight").child("last_weight")
-                .setValue(weight)
-                .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        Log.d("FIREBASE", "Last weight updated.");
-                    }
-                    else{
-                        Log.e("FIREBASE", "Error updating weight!", task.getException());
-                    }
-                });
-    }
 
     public void updateSetting(String setting,String value){
-        myRef.child("raspberry_actions").child(setting)
+        myRef.child(setting)
                 .setValue(value)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){

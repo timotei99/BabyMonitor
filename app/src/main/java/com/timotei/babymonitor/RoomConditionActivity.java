@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.timotei.babymonitor.data.SensorsRepository;
 import com.timotei.babymonitor.databinding.ActivityRoomConditionBinding;
 import com.timotei.babymonitor.helpers.ThingspeakUpdater;
 import com.timotei.babymonitor.ui.settings.SettingsRepository;
@@ -33,7 +34,7 @@ import java.util.Set;
 public class RoomConditionActivity extends AppCompatActivity {
 
     private ActivityRoomConditionBinding binding;
-    private SettingsRepository repo;
+    private SensorsRepository repo;
     private ThingspeakUpdater updater;
     private String tare="0";
     private String total="0";
@@ -42,7 +43,7 @@ public class RoomConditionActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        repo = SettingsRepository.getInstance();
+        repo = SensorsRepository.getInstance();
         Context context=this;
 
         binding=ActivityRoomConditionBinding.inflate(getLayoutInflater());
