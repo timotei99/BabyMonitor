@@ -15,51 +15,37 @@
         android:drawableLeft="@drawable/mobile_phone"
         android:drawablePadding="6dp"
         android:fontFamily="@font/roboto_bold"
-        android:paddingStart="16dp"
+        android:paddingStart="24dp"
         android:text="Pair devices"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnSync"
-        style="@style/buttonBlue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sync"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
-
     <TextView
         android:id="@+id/textView15"
-        android:gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Insert address of 'Baby monitor' then press SYNC"
-        android:textSize="20sp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/roboto_italic"
+        android:gravity="center_horizontal"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-    <EditText
-        android:id="@+id/ipAddress"
-        style="@style/MyEditText"
-        android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:elevation="12dp"
-        android:ems="10"
-        android:hint="IP Address"
-        android:inputType="textPersonName"
-        android:paddingStart="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSync"
+        android:text="Press to scan the QR code"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5"
+        android:src="@drawable/qrcode_scan_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

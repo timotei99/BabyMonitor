@@ -14,6 +14,7 @@ import androidx.preference.SwitchPreference;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.timotei.babymonitor.LoginActivity;
+import com.timotei.babymonitor.PairingActivity;
 import com.timotei.babymonitor.R;
 import com.timotei.babymonitor.databinding.FragmentSettingsBinding;
 
@@ -33,6 +34,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         addPreferencesFromResource(R.xml.preference);
+
+        Preference syncBtn = findPreference("syncBtn");
+        if(syncBtn!=null){
+            syncBtn.setOnPreferenceClickListener(preference -> {
+                startActivity(new Intent(requireContext(), PairingActivity.class));
+                return true;
+            });
+        }
 
         Preference logoutBtn = findPreference("logoutBtn");
         if(logoutBtn!=null) {

@@ -1,13 +1,17 @@
 package com.timotei.babymonitor;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.timotei.babymonitor.databinding.ActivityStreamBinding;
 
@@ -20,8 +24,8 @@ public class StreamActivity extends AppCompatActivity {
 
     //79.114.83.150 - public IP
     //192.168.100.15
-    private static final String url = "rtsp://79.114.83.150:8554/unicast";
-
+    private SharedPreferences sharedPreferences;
+    private String url;
     private LibVLC libVlc;
     private MediaPlayer mediaPlayer;
     private VLCVideoLayout videoLayout;
@@ -32,6 +36,10 @@ public class StreamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stream);
 
+        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String ip=sharedPreferences.getString("IpAddress","none");
+        url="rtsp://"+ip+"/unicast";
+        Log.d("STREAM","Address is: "+url);
         libVlc = new LibVLC(this);
         mediaPlayer = new MediaPlayer(libVlc);
         videoLayout = findViewById(R.id.videoLayout);

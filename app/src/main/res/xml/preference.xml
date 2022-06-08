@@ -41,10 +41,19 @@
         app:title="Options"
         app:key="options">
         <androidx.preference.Preference
+            android:key="syncBtn"
+            android:icon="@drawable/ic_baseline_refresh_24"
+            android:summary="Press to re-sync with monitor"
+            android:title="Sync" />
+        <androidx.preference.Preference
             android:key="logoutBtn"
             android:icon="@drawable/ic_baseline_logout_24"
             android:summary="Press to log out"
             android:title="Logout" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            android:key="hidden"/>
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

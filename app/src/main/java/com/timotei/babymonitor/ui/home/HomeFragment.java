@@ -91,8 +91,7 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(requireContext(), GraphsActivity.class));
         });
 
-        Button btnBlt=binding.btnBluetooth;
-        btnBlt.setOnClickListener(v -> startActivity(new Intent(requireContext(), PairingActivity.class)));
+
 
         return root;
     }
