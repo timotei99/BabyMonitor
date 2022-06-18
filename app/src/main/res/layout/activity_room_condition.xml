@@ -286,6 +286,15 @@
             app:layout_constraintStart_toStartOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+        <ImageButton
+            android:id="@+id/refreshBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            app:layout_constraintStart_toEndOf="@+id/btnBack"
+            app:layout_constraintTop_toTopOf="@+id/btnBack"
+            app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class RoomConditionActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button weigh;
     private Button back;
+    private ImageButton refresh;
     private Context context;
     private ValueAnimator animator;
 
@@ -67,12 +69,25 @@ public class RoomConditionActivity extends AppCompatActivity {
         progressBar = binding.progressBar2;
         weigh=binding.btnWeigh;
         back=binding.btnBack;
+        refresh=binding.refreshBtn;
 
         setListeners();
+        setParameters();
+
+        setContentView(binding.getRoot());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void setParameters(){
         temp.setText(getString(R.string.temperature,repo.getSensors().getTemperature()));
         humidity.setText(getString(R.string.humidity,repo.getSensors().getHumidity()));
         pulse.setText(getString(R.string.heart_rate,repo.getSensors().getHeart_rate()));
         weight.setText(getString(R.string.weight,repo.getSensors().getLast_weight()));
+
         int value=Integer.parseInt(repo.getSensors().getAir_quality());
         ppm.setText(getString(R.string.air_quality,value));
         int progress=value/21; // I pick 2100 as a maximum value
@@ -90,19 +105,18 @@ public class RoomConditionActivity extends AppCompatActivity {
         animator.start();
 
         setBarColorAndText(value);
-
-        setContentView(binding.getRoot());
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void setListeners(){
         back.setOnClickListener(v -> startActivity(new Intent(context,HomeActivity.class)));
         weigh.setOnClickListener(v -> {
             startAlertDialog();
+        });
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setParameters();
+            }
         });
     }
 
