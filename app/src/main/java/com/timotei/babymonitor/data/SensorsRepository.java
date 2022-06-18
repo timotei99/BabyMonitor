@@ -57,7 +57,7 @@ public class SensorsRepository {
     }
 
     public void storeLastWeight(String weight){
-        myRef.child("sensors").child("weight").child("last_weight")
+        myRef.child("sensors").child("last_weight")
                 .setValue(weight)
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){

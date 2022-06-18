@@ -38,6 +38,8 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private SensorsRepository sensorsRepo;
     private HomeRepository homeRepository;
+    private String uid;
+    private NavController navController;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -47,25 +49,18 @@ public class HomeActivity extends AppCompatActivity {
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         sensorsRepo = SensorsRepository.getInstance();
         homeRepository = HomeRepository.getInstance();
-
-        String username = FirebaseAuth.getInstance().getUid();
-        FirebaseMessaging.getInstance().subscribeToTopic("user_"+username);
-
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                 R.id.navigation_settings, R.id.navigation_home, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home);
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        uid = FirebaseAuth.getInstance().getUid();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
+        subscribeToNotificationTopic();
         sensorsRepo.getSensorData();
 
     }
 
-
+    private void subscribeToNotificationTopic(){
+        FirebaseMessaging.getInstance().subscribeToTopic("user_"+uid);
+    }
 }

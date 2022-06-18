@@ -15,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,6 +59,12 @@ public class HomeFragment extends Fragment {
 
     private HomeRepository repo;
     private FragmentHomeBinding binding;
+    private TextView time;
+    private TextView name;
+    private Button watchBtn;
+    private Button roomConditionBtn;
+    private Button dataBtn;
+    private ImageView imgView;
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
@@ -69,30 +76,19 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         repo=HomeRepository.getInstance();
 
-        final TextView time = binding.time;
-        final TextView name = binding.name;
-        final Button watchBtn = binding.btnStream;
-        final Button roomConditionBtn = binding.btnRoomCondition;
-        final Button dataBtn = binding.btnData;
-        final ImageView imgView = binding.imageView;
+        time = binding.time;
+        name = binding.name;
+        watchBtn = binding.btnStream;
+        roomConditionBtn = binding.btnRoomCondition;
+        dataBtn = binding.btnData;
+        imgView = binding.imageView;
 
         repo.setName(name);
         time.setText(dateTimeFormatter.format(LocalDateTime.now()));
         setImage(imgView);
 
         View root = binding.getRoot();
-        watchBtn.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), StreamActivity.class));
-        });
-        roomConditionBtn.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), RoomConditionActivity.class));
-        });
-        dataBtn.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), GraphsActivity.class));
-        });
-
-
-
+        setListeners();
         return root;
     }
 
@@ -102,12 +98,23 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
+    private void setListeners(){
+        watchBtn.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), StreamActivity.class));
+        });
+        roomConditionBtn.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), RoomConditionActivity.class));
+        });
+        dataBtn.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), GraphsActivity.class));
+        });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setImage(ImageView image) {
 
         FirebaseStorage storage=FirebaseStorage.getInstance();
         StorageReference imgRef=storage.getReference().child("baby_sleeping.jpg");
-        //TODO : place UID before image in storage
 
         imgRef.getDownloadUrl()
                 .addOnSuccessListener(uri -> Picasso.get().load(uri).fit().into(image))

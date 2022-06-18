@@ -32,6 +32,7 @@ public class NotificationsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private RecyclerView recycler;
     private FirestoreRecyclerAdapter adapter;
+    private Query query;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class NotificationsFragment extends Fragment {
         recycler= binding.recycler;
 
         String uid=mAuth.getCurrentUser().getUid();
-        Query query=db.collection("notifications").orderBy("date").whereEqualTo("userId",uid);
+        query=db.collection("notifications").orderBy("date").whereEqualTo("userId",uid);
         FirestoreRecyclerOptions<NotificationModel> options= new FirestoreRecyclerOptions.Builder<NotificationModel>()
                 .setQuery(query,NotificationModel.class)
                 .build();
@@ -66,7 +67,6 @@ public class NotificationsFragment extends Fragment {
                 holder.itemView.setOnClickListener(v -> {
                     holder.itemView.setVisibility(View.GONE);
                     String docId=getSnapshots().getSnapshot(holder.getAdapterPosition()).getId();
-                    Log.d("Firebase","Doc id is: "+docId);
                     NotificationRepository repo = new NotificationRepository();
                     repo.deleteNotification(docId,requireContext());
                 });

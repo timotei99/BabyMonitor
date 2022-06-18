@@ -33,35 +33,79 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
     private ProgressBar loadingProgressBar;
+    private EditText emailEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private TextView createAccountTextView;
+    private SharedPreferences prefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if(!prefs.contains("IpAddress")){
-            startActivity(new Intent(this,PairingActivity.class));
-        }
-
+        prefs= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser()!=null){
-            startActivity(new Intent(this,HomeActivity.class));
-        }
-
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final TextView createAccountTextView =binding.createAccountTv;
+        emailEditText = binding.email;
+        passwordEditText = binding.password;
+        loginButton = binding.login;
+        createAccountTextView =binding.createAccountTv;
         loadingProgressBar = binding.loading;
 
+        checkDevicesArePaired();
+        checkUserIsLoggedIn();
+        setOnClickListeners();
+        setContentView(binding.getRoot());
+    }
 
+    private void loginUser(String email, String password){
+        if(email.isEmpty() || password.isEmpty()){
+            Toast.makeText(LoginActivity.this,"Please fill in all fields.",Toast.LENGTH_SHORT).show();
+            updateUI(null);
+        }
+        else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                // check email is verified
+                                if (!user.isEmailVerified()) {
+                                    mAuth.getCurrentUser().sendEmailVerification();
+                                    Toast.makeText(LoginActivity.this, "Please verify your email!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Toast.makeText(LoginActivity.this, "User logged in successfully!", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    updateUI(user);
+                                }
+                            }
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithPassword:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    });
+        }
+    }
+
+    private void updateUI(FirebaseUser currentUser){
+        if(currentUser != null){
+            Toast.makeText(this,"You signed In successfully",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this,HomeActivity.class));
+        }else {
+            Toast.makeText(this,"Sign in failed!",Toast.LENGTH_SHORT).show();
+            loadingProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void setOnClickListeners(){
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginUser(usernameEditText.getText().toString(),
+            loginUser(emailEditText.getText().toString(),
                     passwordEditText.getText().toString());
         });
 
@@ -71,44 +115,17 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUser(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if(user!=null){
-                            // check email is verified
-                            if(!user.isEmailVerified()){
-                                mAuth.getCurrentUser().sendEmailVerification();
-                                Toast.makeText(LoginActivity.this,"Please verify your email!", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(LoginActivity.this,"User logged in successfully!", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "signInWithEmail:success");
-                                updateUI(user);
-
-                            }
-                        }
-                        // Sign in success, update UI with the signed-in user's information
-
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithPassword:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                        updateUI(null);
-                        loadingProgressBar.setVisibility(View.GONE);
-                    }
-                });
-    }
-
-    private void updateUI(FirebaseUser currentUser){
-        if(currentUser != null){
-            Toast.makeText(this,"You signed In successfully",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this,HomeActivity.class));
-
-        }else {
-            Toast.makeText(this,"You didn't signed in",Toast.LENGTH_LONG).show();
+    private void checkDevicesArePaired(){
+        if(!prefs.contains("IpAddress")){
+            startActivity(new Intent(this,PairingActivity.class));
         }
     }
+
+    private void checkUserIsLoggedIn(){
+        if(mAuth.getCurrentUser()!=null){
+            startActivity(new Intent(this,HomeActivity.class));
+        }
+    }
+
 
 }

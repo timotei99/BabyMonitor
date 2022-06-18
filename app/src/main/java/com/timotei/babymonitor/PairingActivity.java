@@ -51,6 +51,7 @@ public class PairingActivity extends AppCompatActivity {
     private ActivityPairingBinding binding;
     private String IP;
     private String uid;
+    private ImageButton qrBtn;
     private Context context;
     private SyncHandler syncHandler;
     private SharedPreferences sharedPreferences;
@@ -61,7 +62,7 @@ public class PairingActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         binding=ActivityPairingBinding.inflate(getLayoutInflater());
-        ImageButton qrBtn= binding.imageButton;
+        qrBtn= binding.imageButton;
         setContentView(binding.getRoot());
 
         context = this;
@@ -80,7 +81,6 @@ public class PairingActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(View v) {
-
                 barcodeLauncher.launch(options);
             }
         });
@@ -98,7 +98,6 @@ public class PairingActivity extends AppCompatActivity {
             Toast.makeText(this,"Not a valid destination!",Toast.LENGTH_LONG).show();
             return false;
         }
-
         return true;
     }
 
@@ -106,21 +105,22 @@ public class PairingActivity extends AppCompatActivity {
         String temp=url.split("//")[1];
         String temp2=temp.split("/")[0];
         IP=temp2.split(":")[0];
-        Log.d("PAIRING","Address is: "+IP);
     }
 
     private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
             result -> {
                 if(result.getContents() == null) {
-                    Toast.makeText(PairingActivity.this, "Scanning failed!", Toast.LENGTH_LONG).show();
+                    showMessage("Scanning failed!");
                 } else {
-                    Toast.makeText(PairingActivity.this, "Scanned successfully. Now syncing...", Toast.LENGTH_LONG).show();
+                    showMessage("Scanned successfully. Now syncing...");
                     try {
                         extractIp(result.getContents());
                         editor.putString("IpAddress",IP);
-                        editor.commit();
                         if(validateIP()){
                             syncHandler.sendIdToRaspberry(result.getContents(),uid,context);
+                        }
+                        else{
+                            showMessage("Invalid QR!");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -128,4 +128,17 @@ public class PairingActivity extends AppCompatActivity {
                 }
             });
 
+    @Override
+    public void onPause() {
+        editor.apply();
+        super.onPause();
+    }
+
+    private void showMessage(String message){
+        Toast.makeText(
+                PairingActivity.this,
+                message,
+                Toast.LENGTH_LONG
+        ).show();
+    }
 }

@@ -34,6 +34,13 @@ import java.util.Objects;
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private FirebaseAuth mAuth;
+    private EditText emailEt;
+    private EditText nameEt;
+    private EditText phoneEt;
+    private EditText passwordEt;
+    private EditText confirmPasswordEt;
+    private Button registerBtn;
+    private TextView login;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -41,35 +48,22 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         mAuth = FirebaseAuth.getInstance();
+        emailEt = binding.editTextTextEmailAddress;
+        nameEt = binding.nameEt;
+        phoneEt = binding.editTextTextPhoneNumber;
+        passwordEt = binding.editTextTextPassword;
+        confirmPasswordEt = binding.editTextTextPassword2;
+        registerBtn = binding.registerBtn;
+        login= binding.loginTv;
 
-        final EditText email = binding.editTextTextEmailAddress;
-        final EditText name = binding.nameEt;
-        final EditText phone = binding.editTextTextPhoneNumber;
-        final EditText password=binding.editTextTextPassword;
-        final EditText confirmPassword = binding.editTextTextPassword2;
+        setContentView(binding.getRoot());
+        setOnClickListeners();
 
-
-        final Button registerBtn = binding.registerBtn;
-        final TextView login= binding.loginTv;
-
-        login.setOnClickListener(v-> {
-            startActivity(new Intent(this, LoginActivity.class));
-        });
-
-        registerBtn.setOnClickListener(v -> {
-            registerUser(email,
-                    name,
-                    phone,
-                    password,
-                    confirmPassword);
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void registerUser(EditText emailEt, EditText nameEt, EditText phoneEt, EditText passwordEt, EditText confirmPasswordEt){
+    private void registerUser(){
         final String email = Objects.requireNonNull(emailEt.getText()).toString();
         final String name = Objects.requireNonNull(nameEt.getText().toString());
         final String phone = Objects.requireNonNull(phoneEt.getText()).toString();
@@ -135,17 +129,18 @@ public class RegisterActivity extends AppCompatActivity {
         user.put("registerDate",dateTimeFormatter.format(LocalDateTime.now()));
         db.collection("users").document(uid)
                 .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>(){
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("AUTH","DocumentSnapshot added with ID: "+uid);
-                    }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Error adding document",e);
-                    }
-                });
+                .addOnSuccessListener(unused -> Log.d("AUTH","DocumentSnapshot added with ID: "+uid))
+                .addOnFailureListener(e -> Log.w("Error adding document",e));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setOnClickListeners(){
+        login.setOnClickListener(v-> {
+            startActivity(new Intent(this, LoginActivity.class));
+        });
+
+        registerBtn.setOnClickListener(v -> {
+            registerUser();
+        });
     }
 }

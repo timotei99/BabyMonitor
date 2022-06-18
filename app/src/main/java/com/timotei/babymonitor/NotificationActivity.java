@@ -26,45 +26,95 @@ import com.timotei.babymonitor.ui.settings.SettingsRepository;
 public class NotificationActivity extends AppCompatActivity {
 
     private ActivityNotificationBinding binding;
+    private TextView message;
+    private Button cancelBtn;
+    private Button playBtn;
+    private TextView noises;
+    private ImageView img;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Vibrator vibrator= (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(new long[] { 500, 1000, 1000, 1000, 1000,1000,1000 },-1);
+
 
         binding = ActivityNotificationBinding.inflate(getLayoutInflater());
 
         onNewIntent(getIntent());
 
         String notificationType=getIntent().getExtras().getString("id");
-        final TextView text=binding.message;
-        final Button cancelBtn = binding.btnCancel;
-        final Button playBtn=binding.btnPlay;
-        final TextView noises=binding.noisesMessage;
-        final ImageView img=binding.babyImg;
+        message=binding.message;
+        cancelBtn = binding.btnCancel;
+        playBtn=binding.btnPlay;
+        noises=binding.noisesMessage;
+        img=binding.babyImg;
         Context context=this;
 
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SettingsRepository.getInstance().startWhiteNoises();
-            }
-        });
+        setListeners();
+        setAlertMessage(notificationType);
+        startAnimation();
 
-        switch(notificationType){
-            case "crying": text.setText("Baby is crying!!");
-                            playBtn.setVisibility(View.VISIBLE);
-                            noises.setVisibility(View.VISIBLE);
-            break;
-            case "face_covered": text.setText("Baby has face covered!");
-                                binding.getRoot().setBackgroundResource(R.color.beige);
-            break;
-            default: text.setText("Go check baby!!");
+        setContentView(binding.getRoot());
+    }
+
+    public void setListeners(){
+        playBtn.setOnClickListener(v -> SettingsRepository.getInstance().startWhiteNoises());
+        cancelBtn.setOnClickListener(v -> startActivity(new Intent(this,HomeActivity.class)));
+    }
+
+    private void setAlertMessage(String notificationType) {
+        switch (notificationType) {
+            case "crying":
+                startVibration();
+                message.setText("Baby is crying!!");
+                img.setImageResource(R.drawable.crying_256px);
+                playBtn.setVisibility(View.VISIBLE);
+                noises.setVisibility(View.VISIBLE);
+                break;
+            case "faceCovered":
+                startVibration();
+                message.setText("Baby's face is covered! Go check!");
+                setColor(R.color.red);
+                break;
+            case "eyesOpen":
+                message.setText("Baby's eyes are open!");
+                img.setImageResource(R.drawable.baby_boy);
+                setColor(R.color.beige);
+                playBtn.setVisibility(View.VISIBLE);
+                noises.setVisibility(View.VISIBLE);
+                break;
+            case "bodyUncovered":
+                message.setText("Baby is not covered at all!");
+                setColor(R.color.baby_blue);
+                break;
+            case "notFacingUp":
+                message.setText("Baby is not facing up! Go fix harmful posture!");
+                setColor(R.color.light_red);
+                break;
+            case "onSide":
+                message.setText("Baby is sleeping on one side! Go fix harmful posture!");
+                setColor(R.color.light_red);
+                break;
+            case "legsFullyVisible":
+                message.setText("Baby legs are visible!");
+                setColor(R.color.baby_yellow);
+                break;
+            default:
+                message.setText("Go check baby!!");
         }
+    }
 
+    private void setColor(int color){
+        binding.getRoot().setBackgroundResource(color);
+    }
+
+    private void startVibration(){
+        Vibrator vibrator= (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(new long[] { 500, 1000, 1000, 1000, 1000,1000,1000 },-1);
+    }
+
+    private void startAnimation(){
         Animation zoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
         Animation zoomOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_out);
 
@@ -98,17 +148,6 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onAnimationRepeat(Animation animation) {}
         });
-
-        cancelBtn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                startActivity(new Intent(context,HomeActivity.class));
-                return true;
-            }
-        });
-
-        cancelBtn.setOnClickListener(v -> startActivity(new Intent(context,HomeActivity.class)));
-        setContentView(binding.getRoot());
     }
 
 }
